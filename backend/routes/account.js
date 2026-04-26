@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const zod = require('zod');
 const {User, Account} = require('../db');
-const authMiddleware = require('../middleware/auth');
+const authMiddleware = require('../middleware');
 
 router.get('/balance', authMiddleware, async (req, res) => {
     const account = await Account.findOne({
@@ -17,7 +17,7 @@ router.get('/balance', authMiddleware, async (req, res) => {
 })
 
 router.post('transfer', authMiddleware, async (req, res) => {
-    const session = await monggoose.startSession();
+    const session = await mongoose.startSession();
 
     session.startTransaction();
     const { amount, to } = req.body

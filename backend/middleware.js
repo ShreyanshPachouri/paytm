@@ -1,4 +1,4 @@
-const JWT_SECRET = require('./config').JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET
 const jwt = require('jsonwebtoken');
 
 const authMiddleware = (req, res, next) => {
@@ -25,3 +25,5 @@ const authMiddleware = (req, res, next) => {
         return res.status(403).json({})
     }
 }
+
+module.exports = authMiddleware;
