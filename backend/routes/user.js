@@ -98,23 +98,39 @@ const updateBody = zod.object({
     password: zod.string().optional()
 })
 
-router.put('/update', authMiddleware, async(req, res) => {
+router.put('/update', authMiddleware, async (req, res) => {
     const result = updateBody.safeParse(req.body);
 
-    if(!result.success) {
+    if (!result.success) {
         return res.status(411).json({
             message: 'Incorrect body'
-        })
+        });
     }
 
-    const user = await User.updateOne({
-        _id: req.userId
-    }, req.body)
+    const updateResult = await User.updateOne(
+        { _id: req.userId },
+        { $set: result.data }
+    );
+
+    console.log(updateResult);
+
+    if (updateResult.matchedCount === 0) {
+        return res.status(404).json({
+            message: "User not found"
+        });
+    }
+
+    if (updateResult.modifiedCount === 0) {
+        return res.json({
+            message: "No changes made"
+        });
+    }
 
     res.json({
         message: 'User updated successfully'
-    })
-})
+    });
+});
+
 
 router.get("/bulk", async (req, res) => {
     const filter = req.query.filter || "";
