@@ -11,7 +11,9 @@ router.get('/balance', authMiddleware, async (req, res) => {
     })
 
     if(!account) {
-        return res.status(404).json({error: 'Account not found'})
+        return res.status(404).json({
+            message: "Accounts not found"
+        })
     }
 
     return res.json({balance: account.balance})
